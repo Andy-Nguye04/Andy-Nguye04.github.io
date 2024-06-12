@@ -43,6 +43,28 @@
 
 		<aside>As we calculated [teams_lost_avg, teams_lost_opp_avg] we got [1.438, 3.034].</aside>
 
+		<p>As we can see it's hard to use graphs to visualize the impact of having dragons on winning a league of legends game, these are pros after all. However we did see from the averagees that on average teams who lost had under 2 dragons whereas teams who won had over 3 dragons. This may be a pattern that we need to further investigate</p>
+
+		<h5>Assessment of Missingness</h5>
+		<p>In our dataset there appears to be one column that is NMAR (Not Missing At Random), the elders and opp_elders column. Using our knowledge of the game and columns in the dataset we can derive that the column's data is missing due to the gamelength column as the time an elder dragon spawns in depends on both how long the game has gone on and the amount of dragons that have been claimed.</p>
+
+		<p>print(missing_elders_df.head(6).to_markdown())</p>
+
+		<p>Interestingly we can see that 'elementaldrakes' is also NaN but for our case it is redundant as we can substitute them for dragons as they measure the same thing, also since for now we can assume that elders is NaN because it hasn't spawned in yet and we can say that dragons is the total count for 'elementaldrakes' anyways.</p>
+
+		<p>In League of Legends, the edler dragon only spawns once one team has claimed the dragon soul or has killed 4 dragons in total. So we can take a look at both the game length to see if a game ended too soon for the elder dragon to spawn in or we can look at the total number of dragons obtained by teams to see that the elder dragon is NMAR. And for simplicity we do not need the opp column as we have the rows with the stats for both teams. </p>
+
+		<p>missing_elders_df.head(6)</p>
+
+		<p>At first glance the first 3 games, we can see that the first 3 games, we can see that the first two no team reached 4 dragons thus the elder dragon did not spawn in, however in the third game one team did reach 4 dragons so did that mean they won before it could spawn in? After the dragon soul is claimed there is a 5 minute window before the elder dragon spawns in so it is possible that the game may have ended before it had a chance to spawn. Let's check the results of that game. </p>
+		<p>matches.iloc[82]['result'] = 1</p>
+
+		<p>Taken from the LoL wiki, the first dragon spawns in at 5 minutes elapsed and afterwards has a respawn time of 5 minutes subsequently, so if we take that into account that is 25 minutes in total of regenerating time for the dragon. Subtracting that from the game length we are left with 6.55 minutes and the first 5 minutes before the dragon spawns into the game we are left 1.55 minutes, or not enough time for the elder dragon to spawn in thus justifying our NMAR. We could continute with this for any of the matches at random and will end up with the same result. </p>
+
+		<h6>Hypothesis Testing</h6>
+
+		<p>My hypothesis was: The team with more dragons overall is going to win. And the Null is: The amount of dragons does not affect winning.</p>
+
 	</main>
 </body>
 </html>
